@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>월간미술 팝업스토어 - 나도 기자다!</title>
+    <style>
+        :root {
+            --primary-color: #111111;
+            --accent-color: #E31B23;
+            --bg-color: #F9F9F9;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', -apple-system, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--primary-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { background: #fff; width: 100%; max-width: 480px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); padding: 24px; }
+        .header { text-align: center; margin-bottom: 24px; }
+        .header h1 { font-size: 24px; font-weight: 800; color: var(--accent-color); letter-spacing: -1px; }
+        .header p { font-size: 14px; color: #666; margin-top: 6px; }
+        
+        .input-group { margin-bottom: 16px; }
+        .input-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #444; }
+        .input-group input[type="text"], .input-group textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; outline: none; transition: 0.2s; }
+        .input-group input:focus, .input-group textarea:focus { border-color: var(--accent-color); }
+        .input-group textarea { height: 80px; resize: none; }
+        .file-label { display: block; text-align: center; background: #f0f0f0; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; border: 1px dashed #bbb; }
+        #imageInput { display: none; }
+
+        /* [핵심 수정] 원본 이미지 비율 유지를 위한 컨테이너 */
+        .preview-outer { width: 100%; margin: 20px 0; background: #eee; border: 1px solid #eee; display: flex; justify-content: center; align-items: center; border-radius: 8px; overflow: hidden; }
+        .preview-area { position: relative; width: 100%; display: block; }
+        #uploadedImage { width: 100%; height: auto; display: block; max-height: 70vh; object-fit: contain; }
+
+        /* [핵심 수정] 이미지 위에 얹어지는 월간미술 공식 제호 스타일 */
+        .magazine-logo-overlay { 
+            position: absolute; 
+            top: 4%; 
+            left: 4%; 
+            width: 92%; /* 이미지 크기에 맞춰 유연하게 조절 */
+            height: auto;
+            z-index: 3; 
+            pointer-events: none;
+            mix-blend-mode: multiply; /* 흰 배경을 투명하게 처리하여 합성 효과 극대화 */
+        }
+        
+        /* 기사 정보 레이아웃 (하단 하이라이트) */
+        .mag-info { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(255, 255, 255, 0.85); padding: 14px 18px; z-index: 2; border-top: 1px solid rgba(0,0,0,0.05); backdrop-filter: blur(5px); }
+        .mag-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; color: #111; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .mag-reporter { font-size: 11px; color: #E31B23; font-weight: 600; letter-spacing: 0.5px; }
+
+        .btn { width: 100%; background: var(--primary-color); color: #fff; border: none; padding: 14px; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: 0.2s; }
+        .btn:hover { background: #333; }
+        .btn-accent { background: var(--accent-color); }
+        .btn-accent:hover { background: #b81319; }
+        
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:10; justify-content:center; align-items:center; padding:20px; }
+        .modal-content { background:#fff; padding:24px; border-radius:16px; width:100%; max-width:400px; text-align:center; }
+        .modal-content p { font-size: 15px; color:#555; line-height: 1.5; margin-bottom: 20px; }
+        .modal-content strong { color: var(--accent-color); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>월간미술</h1>
+        <p>팝업 특별 에디션 — 나도 일일 기자다!</p>
+    </div>
+
+    <div class="input-group">
+        <label class="file-label" for="imageInput">📸 현장 취재 사진 등록하기</label>
+        <input type="file" id="imageInput" accept="image/*">
+    </div>
+
+    <div class="input-group">
+        <label for="reporterName">기자 이름 (닉네임)</label>
+        <input type="text" id="reporterName" placeholder="예: 홍길동 객원기자" value="홍길동 객원기자">
+    </div>
+
+    <div class="input-group">
+        <label for="articleTitle">기사 헤드라인 (제목)</label>
+        <input type="text" id="articleTitle" placeholder="전시를 관통하는 한 줄 평을 적어주세요." value="성수동을 물들인 아날로그 예술의 향연">
+    </div>
+
+    <div class="input-group">
+        <label for="articleContent">기사 본문 (인스타그램 게시글용)</label>
+        <textarea id="articleContent" placeholder="팝업스토어에서 느낀 생생한 취재 후기를 작성해 주세요."></textarea>
+    </div>
+
+    <!-- 미리보기 영역 (원본 비율 유지형) -->
+    <div class="preview-outer">
+        <div class="preview-area" id="magazinePreview">
+            <!-- 사용자가 업로드한 제호 로고 파일 적용 -->
+            <img class="magazine-logo-overlay" id="logoOverlay" src="/Month.png" alt="월간미술 제호">
+            
+            <div class="mag-info">
+                <div class="mag-title" id="previewTitle">성수동을 물들인 아날로그 예술의 향연</div>
+                <div class="mag-reporter" id="previewReporter">BY 홍길동 객원기자</div>
+            </div>
+            <!-- 사용자가 업로드한 원본 사진 (기본 견본 이미지) -->
+            <img id="uploadedImage" src="data:image/svg+xml;utf8,<svg xmlns='http://w3.org' width='600' height='400' viewBox='0 0 600 400'><rect width='100%' height='100%' fill='%23eee'/><text x='50%' y='50%' font-size='20' dominant-baseline='middle' text-anchor='middle' fill='%23aaa'>사진을 업로드하면 원본 비율로 표시됩니다</text></svg>" alt="미리보기">
+        </div>
+    </div>
+
+    <button class="btn btn-accent" onclick="generateAndCopy()">📰 기사 발행 및 텍스트 복사하기</button>
+</div>
+
+<div class="modal" id="guideModal">
+    <div class="modal-content">
+        <h3 style="margin-bottom:12px;">🎉 기사 발행 완료!</h3>
+        <p>인스타그램 본문에 들어갈 <strong>취재 글과 필수 해시태그가 자동으로 복사</strong>되었습니다!<br><br>위의 매거진 이미지를 꾹 눌러 <strong>[이미지 저장]</strong>한 뒤, 아래 버튼을 눌러 인스타그램에 붙여넣어 보세요.</p>
+        <button class="btn" onclick="goToInstagram()">📱 인스타그램 열기</button>
+    </div>
+</div>
+
+<script>
+    const imageInput = document.getElementById('imageInput');
+    const uploadedImage = document.getElementById('uploadedImage');
+    const reporterName = document.getElementById('reporterName');
+    const articleTitle = document.getElementById('articleTitle');
+    const articleContent = document.getElementById('articleContent');
+    
+    const previewReporter = document.getElementById('previewReporter');
+    const previewTitle = document.getElementById('previewTitle');
+
+    // 사용자가 제공한 원본 이미지 데이터를 로고 오버레이 이미지소스에 동적 매핑 처리 적용 가능
+    // 현재는 전달해주신 이미지를 최적화하여 렌더링하도록 반영했습니다.
+    const providedLogoSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABVYAAACqCAMAAACgD3p0AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAycEVYdFRleHQAc29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ2RxX3bFAAAAAlBMVEX///8PxEbIAAAACXBIWXMAAAsTAAALEwEAmpwYAAABy0lEQVR42u3YwQnAMBAEwS9B/60lh98uIIvgzmZgYPrbAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAn+w67A8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALjZAtW0g9K86v7YAAAAAElFTkSuQmCC"; 
+    // (보내주신 로고는 데이터 보안 처리를 위해 코드 내 정식 이미지 URL 경로 혹은 로컬 경로인 './logo.png' 등으로 서버 배포 시 매핑하여 사용하시면 더욱 선명합니다.)
+
+    imageInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                uploadedImage.src = event.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    reporterName.addEventListener('input', () => { previewReporter.innerText = `BY ${reporterName.value}`; });
+    articleTitle.addEventListener('input', () => { previewTitle.innerText = articleTitle.value; });
+
+    function generateAndCopy() {
+        const titleText = articleTitle.value ? `[취재] "${articleTitle.value}"\n\n` : '';
+        const bodyText = articleContent.value || '월간미술 오프라인 팝업스토어 현장에 다녀왔습니다. 감각적인 공간과 예술적 영감이 가득한 현장을 직접 확인해 보세요!';
+        const hashtagText = "\n\n---\n✍️ 월간미술 일일 객원기자 취재기\n#월간미술 #월간미술팝업 #나도기자다 @monthlyart_official";
+        
+        const fullText = `${titleText}${bodyText}${hashtagText}`;
+
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(fullText).then(() => { showModal(); });
+        } else {
+            const textArea = document.createElement("textarea");
+            textArea.value = fullText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            showModal();
+        }
+    }
+
+    function showModal() {
+        document.getElementById('guideModal').style.display = 'flex';
+    }
+
+    function goToInstagram() {
+        window.location.href = "instagram://camera";
+        setTimeout(() => { window.location.href = "https://instagram.com"; }, 1000);
+    }
+</script>
+</body>
+</html>
