@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>월간미술 팝업스토어 - 나도 기자다!</title>
+
     <style>
         :root {
             --primary-color: #111111;
@@ -15,7 +16,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
         }
 
         body {
@@ -104,7 +105,6 @@
             display: none;
         }
 
-        /* 정사각형 회색 박스 유지 */
         .preview-outer {
             width: 100%;
             margin: 20px 0;
@@ -256,6 +256,10 @@
             overflow-y: auto;
         }
 
+        .modal-content h3 {
+            margin-bottom: 12px;
+        }
+
         .modal-content p {
             font-size: 15px;
             color: #555;
@@ -277,8 +281,28 @@
             display: block;
             margin-top: 12px;
         }
+
+        #captionText {
+            width: 100%;
+            height: 120px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 12px;
+            resize: none;
+        }
+
+        .small-guide {
+            font-size: 12px !important;
+            color: #777 !important;
+            margin-top: 8px !important;
+            margin-bottom: 8px !important;
+        }
     </style>
 </head>
+
 <body>
 
 <div class="container">
@@ -310,12 +334,12 @@
     <div class="preview-outer">
         <div class="preview-area" id="magazinePreview">
             <img id="uploadedImage" alt="미리보기 이미지">
+
             <div class="preview-placeholder">
                 사진을 업로드하면<br>
                 정사각형 기사 이미지로 표시됩니다
             </div>
 
-            <!-- Month.png를 HTML 파일과 같은 폴더에 두세요 -->
             <img class="magazine-logo-overlay" id="logoOverlay" src="./Month.png" alt="월간미술 제호">
 
             <div class="mag-info">
@@ -336,10 +360,18 @@
 
         <p>
             제호가 합성된 이미지가 생성되었습니다.<br>
-            인스타그램 본문에 들어갈 <strong>취재 글과 필수 해시태그도 자동 복사</strong>되었습니다.
+            인스타그램 본문용 텍스트도 아래에 준비되었습니다.
         </p>
 
+        <textarea id="captionText" readonly></textarea>
+
+        <button class="btn btn-light" onclick="copyCaptionAgain()">본문 텍스트 다시 복사하기</button>
         <a id="downloadFinalImage" class="btn btn-accent" download="monthly_art_report.png">이미지 저장하기</a>
+
+        <p class="small-guide">
+            아이폰에서 저장 버튼이 바로 작동하지 않으면, 위 이미지를 길게 눌러 사진 앱에 저장해 주세요.
+        </p>
+
         <button class="btn" onclick="goToInstagram()">📱 인스타그램 앱 열기</button>
         <button class="btn btn-light" onclick="closeModal()">닫기</button>
     </div>
@@ -362,8 +394,10 @@
 
     const finalImage = document.getElementById('finalImage');
     const downloadFinalImage = document.getElementById('downloadFinalImage');
+    const captionText = document.getElementById('captionText');
 
     let uploadedImageSrc = null;
+    let latestCaptionText = "";
 
     imageInput.addEventListener('change', function(e) {
         const file = e.target.files[0];
@@ -381,13 +415,21 @@
         reader.readAsDataURL(file);
     });
 
-    reporterName.addEventListener('input', () => {
-        previewReporter.innerText = `BY ${reporterName.value}`;
+    reporterName.addEventListener('input', function() {
+        previewReporter.innerText = `BY ${reporterName.value || "월간미술 객원기자"}`;
     });
 
-    articleTitle.addEventListener('input', () => {
+    articleTitle.addEventListener('input', function() {
         previewTitle.innerText = articleTitle.value || '기사 제목을 입력해주세요';
     });
+
+    function buildCaptionText() {
+        const titleText = articleTitle.value ? `[취재] "${articleTitle.value}"\n\n` : '';
+        const bodyText = articleContent.value || '월간미술 오프라인 팝업스토어 현장에 다녀왔습니다. 감각적인 공간과 예술적 영감이 가득한 현장을 직접 확인해 보세요!';
+        const hashtagText = `\n\n---\n✍️ 월간미술 일일 객원기자 취재기\n#월간미술 #월간미술팝업 #나도기자다 @${INSTAGRAM_ID}`;
+
+        return `${titleText}${bodyText}${hashtagText}`;
+    }
 
     function copyTextToClipboard(text) {
         if (navigator.clipboard && window.isSecureContext) {
@@ -398,25 +440,47 @@
         textArea.value = text;
         textArea.style.position = "fixed";
         textArea.style.left = "-9999px";
+        textArea.style.top = "0";
         document.body.appendChild(textArea);
         textArea.focus();
         textArea.select();
-        document.execCommand('copy');
+
+        try {
+            document.execCommand('copy');
+        } catch (error) {
+            console.warn("execCommand copy failed", error);
+        }
+
         document.body.removeChild(textArea);
 
         return Promise.resolve();
+    }
+
+    async function copyCaptionAgain() {
+        const text = captionText.value || latestCaptionText;
+
+        try {
+            await copyTextToClipboard(text);
+            alert("본문 텍스트가 복사되었습니다.");
+        } catch (error) {
+            captionText.focus();
+            captionText.select();
+            alert("자동 복사가 차단되었습니다. 아래 본문을 직접 선택해 복사해주세요.");
+        }
     }
 
     function loadImage(src) {
         return new Promise((resolve, reject) => {
             const img = new Image();
 
-            if (/^https?:\/\//.test(src)) {
-                img.crossOrigin = "anonymous";
-            }
+            img.onload = function() {
+                resolve(img);
+            };
 
-            img.onload = () => resolve(img);
-            img.onerror = reject;
+            img.onerror = function(error) {
+                reject(error);
+            };
+
             img.src = src;
         });
     }
@@ -425,7 +489,10 @@
         const imgRatio = img.width / img.height;
         const boxRatio = width / height;
 
-        let drawWidth, drawHeight, offsetX, offsetY;
+        let drawWidth;
+        let drawHeight;
+        let offsetX;
+        let offsetY;
 
         if (imgRatio > boxRatio) {
             drawHeight = height;
@@ -444,6 +511,7 @@
 
     function drawSingleLineEllipsis(ctx, text, x, y, maxWidth) {
         let safeText = text || '';
+
         if (ctx.measureText(safeText).width <= maxWidth) {
             ctx.fillText(safeText, x, y);
             return;
@@ -473,7 +541,7 @@
             drawCoverImage(ctx, photo, 0, 0, size, size);
         } else {
             ctx.fillStyle = "#aaaaaa";
-            ctx.font = "700 38px Pretendard, Apple SD Gothic Neo, sans-serif";
+            ctx.font = "700 38px -apple-system, BlinkMacSystemFont, Apple SD Gothic Neo, sans-serif";
             ctx.textAlign = "center";
             ctx.fillText("사진을 업로드해주세요", size / 2, size / 2);
             ctx.textAlign = "left";
@@ -485,6 +553,7 @@
             const logoHeight = logoWidth * (logo.height / logo.width);
 
             ctx.globalCompositeOperation = "multiply";
+
             ctx.drawImage(
                 logo,
                 size * 0.04,
@@ -492,9 +561,15 @@
                 logoWidth,
                 logoHeight
             );
+
             ctx.globalCompositeOperation = "source-over";
         } catch (error) {
             console.warn("제호 이미지를 불러오지 못했습니다. Month.png 경로를 확인해주세요.", error);
+
+            ctx.globalCompositeOperation = "source-over";
+            ctx.fillStyle = "#111111";
+            ctx.font = "900 92px -apple-system, BlinkMacSystemFont, Apple SD Gothic Neo, sans-serif";
+            ctx.fillText("월간미술", size * 0.04, size * 0.13);
         }
 
         const infoHeight = 160;
@@ -510,7 +585,8 @@
         ctx.stroke();
 
         ctx.fillStyle = "#111111";
-        ctx.font = "700 44px Pretendard, Apple SD Gothic Neo, sans-serif";
+        ctx.font = "700 44px -apple-system, BlinkMacSystemFont, Apple SD Gothic Neo, sans-serif";
+
         drawSingleLineEllipsis(
             ctx,
             articleTitle.value || "기사 제목을 입력해주세요",
@@ -520,7 +596,8 @@
         );
 
         ctx.fillStyle = "#E31B23";
-        ctx.font = "700 30px Pretendard, Apple SD Gothic Neo, sans-serif";
+        ctx.font = "700 30px -apple-system, BlinkMacSystemFont, Apple SD Gothic Neo, sans-serif";
+
         drawSingleLineEllipsis(
             ctx,
             `BY ${reporterName.value || "월간미술 객원기자"}`,
@@ -533,24 +610,27 @@
     }
 
     async function generateAndCopy() {
-        const titleText = articleTitle.value ? `[취재] "${articleTitle.value}"\n\n` : '';
-        const bodyText = articleContent.value || '월간미술 오프라인 팝업스토어 현장에 다녀왔습니다. 감각적인 공간과 예술적 영감이 가득한 현장을 직접 확인해 보세요!';
-        const hashtagText = `\n\n---\n✍️ 월간미술 일일 객원기자 취재기\n#월간미술 #월간미술팝업 #나도기자다 @${INSTAGRAM_ID}`;
-
-        const fullText = `${titleText}${bodyText}${hashtagText}`;
+        latestCaptionText = buildCaptionText();
 
         try {
             const imageDataUrl = await makeFinalImage();
 
             finalImage.src = imageDataUrl;
             downloadFinalImage.href = imageDataUrl;
-
-            await copyTextToClipboard(fullText);
+            captionText.value = latestCaptionText;
 
             showModal();
-        } catch (error) {
-            alert("이미지 생성 중 문제가 생겼습니다. 제호 이미지 경로나 업로드한 사진 파일을 확인해주세요.");
-            console.error(error);
+
+            try {
+                await copyTextToClipboard(latestCaptionText);
+                console.log("텍스트 복사 완료");
+            } catch (copyError) {
+                console.warn("자동 복사가 차단되었습니다.", copyError);
+            }
+
+        } catch (imageError) {
+            console.error("이미지 생성 실패:", imageError);
+            alert("이미지 생성 중 문제가 생겼습니다. 사진 파일 형식이나 제호 이미지 경로를 확인해주세요.");
         }
     }
 
@@ -565,7 +645,9 @@
     function getMobileOS() {
         const ua = navigator.userAgent || navigator.vendor || window.opera;
 
-        if (/android/i.test(ua)) return "android";
+        if (/android/i.test(ua)) {
+            return "android";
+        }
 
         if (
             /iPad|iPhone|iPod/.test(ua) ||
@@ -586,14 +668,16 @@
 
             window.location.href =
                 `intent://camera#Intent;scheme=instagram;package=com.instagram.android;S.browser_fallback_url=${encodedFallback};end`;
+
         } else if (os === "ios") {
             window.location.href = "instagram://camera";
 
-            setTimeout(() => {
+            setTimeout(function() {
                 if (!document.hidden) {
                     window.location.href = fallbackUrl;
                 }
             }, 1200);
+
         } else {
             window.open(fallbackUrl, "_blank");
         }
