@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>월간미술 팝업스토어 - 나도 기자다!</title>
+    <title>월간미술Xbac. 팝업 이벤트 - 나도 기자다!</title>
 
     <style>
         :root {
@@ -43,17 +43,47 @@
             margin-bottom: 24px;
         }
 
-        .header h1 {
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--accent-color);
-            letter-spacing: -1px;
+        .header-logo {
+            display: block;
+            width: 220px;
+            max-width: 80%;
+            height: auto;
+            margin: 0 auto 14px;
         }
 
         .header p {
             font-size: 14px;
             color: #666;
             margin-top: 6px;
+            line-height: 1.5;
+        }
+
+        .header .event-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #111;
+            margin-top: 8px;
+        }
+
+        .header .how-to-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-top: 18px;
+        }
+
+        .header .how-to {
+            text-align: left;
+            background: #f7f7f7;
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-top: 8px;
+        }
+
+        .header .how-to p {
+            margin-top: 4px;
+            font-size: 13px;
+            color: #555;
         }
 
         .input-group {
@@ -231,6 +261,18 @@
             background: #e0e0e0;
         }
 
+        .link-buttons {
+            display: flex;
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .link-buttons a {
+            flex: 1;
+            font-size: 13px;
+            padding: 11px 8px;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -307,8 +349,20 @@
 
 <div class="container">
     <div class="header">
-        <h1>월간미술</h1>
-        <p>팝업 특별 에디션 — 나도 일일 기자다!</p>
+        <a href="https://monthlyart.com" target="_blank" rel="noopener noreferrer">
+            <img class="header-logo" src="./Month.png" alt="월간미술">
+        </a>
+
+        <p class="event-title">월간미술Xbac. 팝업 이벤트 — 나도 기자다!</p>
+        <p>bac. 아트페어를 취재하고 인스타그램에 업로드하면 선물이! 오늘은 여러분이 일일 미술 기자!</p>
+
+        <p class="how-to-title">참여 방법</p>
+
+        <div class="how-to">
+            <p>1. [현장 취재 사진 등록하기] 버튼을 눌러 현장을 취재한 생생한 사진을 업로드한다.</p>
+            <p>2. 기자 이름과 헤드라인을 적고 생생한 취재 기사를 작성한다.</p>
+            <p>3. [기사 완성 및 텍스트 복사하기]를 눌러 완성된 이미지와 복사된 텍스트를 인스타그램에 업로드하면 끝!</p>
+        </div>
     </div>
 
     <div class="input-group">
@@ -323,12 +377,12 @@
 
     <div class="input-group">
         <label for="articleTitle">기사 헤드라인 (제목)</label>
-        <input type="text" id="articleTitle" placeholder="전시를 관통하는 한 줄 평을 적어주세요." value="성수동을 물들인 아날로그 예술의 향연">
+        <input type="text" id="articleTitle" placeholder="전시를 관통하는 한 줄 평을 적어주세요." value="홍대 앞을 물들인 예술의 향연">
     </div>
 
     <div class="input-group">
         <label for="articleContent">기사 본문 (인스타그램 게시글용)</label>
-        <textarea id="articleContent" placeholder="팝업스토어에서 느낀 생생한 취재 후기를 작성해 주세요."></textarea>
+        <textarea id="articleContent" placeholder="bac. 아트페어에서 느낀 생생한 취재 후기를 작성해 주세요."></textarea>
     </div>
 
     <div class="preview-outer">
@@ -343,7 +397,7 @@
             <img class="magazine-logo-overlay" id="logoOverlay" src="./Month.png" alt="월간미술 제호">
 
             <div class="mag-info">
-                <div class="mag-title" id="previewTitle">성수동을 물들인 아날로그 예술의 향연</div>
+                <div class="mag-title" id="previewTitle">홍대 앞을 물들인 예술의 향연</div>
                 <div class="mag-reporter" id="previewReporter">BY 홍길동 객원기자</div>
             </div>
         </div>
@@ -359,9 +413,21 @@
         <img id="finalImage" alt="완성된 월간미술 기사 이미지">
 
         <p>
-            제호가 합성된 이미지가 생성되었습니다.<br>
-            인스타그램 본문용 텍스트도 아래에 준비되었습니다.
+            기사 이미지가 생성되었습니다.<br>
+            인스타그램 본문용 텍스트도 아래에 준비되었습니다.<br>
+            담당자에게 포스팅을 확인해주시면 선물을 드립니다! 참여해주셔서 감사합니다!<br>
+            앞으로도 월간미술에 많은 관심 부탁드립니다!
         </p>
+
+        <div class="link-buttons">
+            <a class="btn btn-light" href="https://docs.google.com/forms/d/e/1FAIpQLSeVPc7c2rIzcg5Eyriveagt1HLGP7m5_H4P_QzK0hM6s0yNfg/viewform" target="_blank" rel="noopener noreferrer">
+                뉴스레터 구독하기
+            </a>
+
+            <a class="btn btn-light" href="https://monthlyart.com/product/%EC%9B%94%EA%B0%84%EB%AF%B8%EC%88%A0-%EC%A0%95%EA%B8%B0%EA%B5%AC%EB%8F%85/" target="_blank" rel="noopener noreferrer">
+                정기구독 신청하기
+            </a>
+        </div>
 
         <textarea id="captionText" readonly></textarea>
 
@@ -425,8 +491,8 @@
 
     function buildCaptionText() {
         const titleText = articleTitle.value ? `[취재] "${articleTitle.value}"\n\n` : '';
-        const bodyText = articleContent.value || '월간미술 오프라인 팝업스토어 현장에 다녀왔습니다. 감각적인 공간과 예술적 영감이 가득한 현장을 직접 확인해 보세요!';
-        const hashtagText = `\n\n---\n✍️ 월간미술 일일 객원기자 취재기\n#월간미술 #월간미술팝업 #나도기자다 @${INSTAGRAM_ID}`;
+        const bodyText = articleContent.value || '월간미술Xbac. 팝업 이벤트 현장에 다녀왔습니다. 감각적인 공간과 예술적 영감이 가득한 현장을 직접 확인해 보세요!';
+        const hashtagText = `\n\n---\n✍️ 월간미술 일일 객원기자 취재기\n#월간미술 #월간미술팝업 #나도기자다 @${INSTAGRAM_ID} @bac.sale`;
 
         return `${titleText}${bodyText}${hashtagText}`;
     }
