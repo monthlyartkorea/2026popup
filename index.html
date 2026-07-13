@@ -248,16 +248,26 @@
             object-fit: cover;
         }
 
+        /* 수정 1: 아티스트 밋업 이미지는 어떤 기기에서도 잘리지 않게 전체 표시 */
+        .program-image.meetup {
+            background: #fff;
+        }
+
         .program-image.meetup img {
-            aspect-ratio: 16 / 9;
+            width: 100%;
+            height: auto;
+            aspect-ratio: auto;
+            object-fit: contain;
         }
 
         .program-image.keyring img {
             aspect-ratio: 4 / 3;
         }
 
+        /* 수정 3: 영상은 정방형 박스에 넣고 위아래를 중심 기준으로 크롭 */
         .program-video {
             width: 100%;
+            aspect-ratio: 1 / 1;
             border-radius: 18px;
             overflow: hidden;
             margin-top: 22px;
@@ -267,7 +277,9 @@
 
         .program-video video {
             width: 100%;
-            height: auto;
+            height: 100%;
+            object-fit: cover;
+            object-position: center center;
         }
 
         .note-box {
@@ -630,7 +642,7 @@
                         </p>
 
                         <div class="program-video">
-                            <video src="./images/keyring.mp4" controls muted playsinline preload="metadata">
+                            <video class="scroll-video" src="./images/keyring.mp4" muted playsinline loop preload="metadata">
                                 브라우저가 동영상을 지원하지 않습니다.
                             </video>
                         </div>
@@ -752,5 +764,38 @@
     </footer>
 
 </div>
+
+<script>
+    const scrollVideos = document.querySelectorAll('.scroll-video');
+
+    if ('IntersectionObserver' in window) {
+        const videoObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                const video = entry.target;
+
+                if (entry.isIntersecting) {
+                    video.play().catch(function(error) {
+                        console.warn('자동 재생이 차단되었습니다.', error);
+                    });
+                } else {
+                    video.pause();
+                }
+            });
+        }, {
+            threshold: 0.35
+        });
+
+        scrollVideos.forEach(function(video) {
+            videoObserver.observe(video);
+        });
+    } else {
+        scrollVideos.forEach(function(video) {
+            video.play().catch(function(error) {
+                console.warn('자동 재생이 차단되었습니다.', error);
+            });
+        });
+    }
+</script>
+
 </body>
 </html>
