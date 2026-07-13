@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bac. 아트페어 X 월간미술 팝업</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --text-color: #151515;
+            --sub-color: #555555;
+            --line-color: #e7e2dc;
+            --bg-color: #fbfaf8;
+            --card-color: #ffffff;
+            --accent-color: #E31B23;
+            --soft-accent: #fff1f1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Serif KR', serif;
+            color: var(--text-color);
+            background: var(--bg-color);
+            line-height: 1.75;
+            word-break: keep-all;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        img,
+        video {
+            display: block;
+            max-width: 100%;
+        }
+
+        .page {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .hero {
+            min-height: 100vh;
+            padding: 72px 20px 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background:
+                radial-gradient(circle at top left, rgba(227, 27, 35, 0.08), transparent 34%),
+                radial-gradient(circle at bottom right, rgba(0, 0, 0, 0.06), transparent 32%),
+                var(--bg-color);
+        }
+
+        .hero-inner {
+            width: 100%;
+            max-width: 920px;
+            margin: 0 auto;
+        }
+
+        .eyebrow {
+            font-size: 15px;
+            letter-spacing: 0.08em;
+            color: var(--accent-color);
+            font-weight: 700;
+            margin-bottom: 22px;
+        }
+
+        .hero h1 {
+            font-size: clamp(36px, 7vw, 72px);
+            line-height: 1.18;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            margin-bottom: 28px;
+        }
+
+        .hero-info {
+            font-size: clamp(17px, 2.8vw, 24px);
+            font-weight: 600;
+            line-height: 1.65;
+            margin-bottom: 42px;
+        }
+
+        .hero-logos {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(20px, 5vw, 56px);
+            flex-wrap: wrap;
+            margin: 34px auto 0;
+        }
+
+        .hero-logo-box {
+            height: 96px;
+            min-width: 180px;
+            padding: 22px 26px;
+            background: rgba(255,255,255,0.72);
+            border: 1px solid var(--line-color);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 16px 50px rgba(0,0,0,0.05);
+        }
+
+        .hero-logo-box img {
+            max-height: 54px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .hero-logo-box.monthly img {
+            max-height: 46px;
+        }
+
+        .scroll-guide {
+            margin-top: 52px;
+            color: var(--sub-color);
+            font-size: 13px;
+            letter-spacing: 0.04em;
+        }
+
+        .section {
+            padding: 88px 20px;
+        }
+
+        .section-inner {
+            width: 100%;
+            max-width: 1080px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: clamp(28px, 4.5vw, 46px);
+            line-height: 1.28;
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            margin-bottom: 28px;
+            text-align: center;
+        }
+
+        .intro-text {
+            max-width: 880px;
+            margin: 0 auto;
+            font-size: clamp(16px, 2.3vw, 20px);
+            line-height: 2;
+            text-align: center;
+            color: #222;
+        }
+
+        .intro-text p + p {
+            margin-top: 24px;
+        }
+
+        .cover-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-top: 54px;
+        }
+
+        .cover-card {
+            background: #fff;
+            border: 1px solid var(--line-color);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 12px 36px rgba(0,0,0,0.06);
+        }
+
+        .cover-card img {
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            object-fit: cover;
+            background: #eee;
+        }
+
+        .program-section {
+            background: #fff;
+            border-top: 1px solid var(--line-color);
+            border-bottom: 1px solid var(--line-color);
+        }
+
+        .program-list {
+            display: grid;
+            gap: 28px;
+            margin-top: 44px;
+        }
+
+        .program-card {
+            background: var(--card-color);
+            border: 1px solid var(--line-color);
+            border-radius: 24px;
+            padding: clamp(24px, 4vw, 42px);
+            box-shadow: 0 18px 50px rgba(0,0,0,0.04);
+        }
+
+        .program-number {
+            color: var(--accent-color);
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+        }
+
+        .program-card h3 {
+            font-size: clamp(24px, 3.4vw, 34px);
+            line-height: 1.35;
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            margin-bottom: 18px;
+        }
+
+        .program-card p {
+            font-size: 17px;
+            color: #252525;
+        }
+
+        .program-card p + p {
+            margin-top: 10px;
+        }
+
+        .program-image {
+            width: 100%;
+            border-radius: 18px;
+            overflow: hidden;
+            margin: 22px 0;
+            background: #eee;
+            border: 1px solid var(--line-color);
+        }
+
+        .program-image img {
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .program-image.meetup img {
+            aspect-ratio: 16 / 9;
+        }
+
+        .program-image.keyring img {
+            aspect-ratio: 4 / 3;
+        }
+
+        .program-video {
+            width: 100%;
+            border-radius: 18px;
+            overflow: hidden;
+            margin-top: 22px;
+            background: #eee;
+            border: 1px solid var(--line-color);
+        }
+
+        .program-video video {
+            width: 100%;
+            height: auto;
+        }
+
+        .note-box {
+            margin-top: 22px;
+            background: var(--soft-accent);
+            border: 1px solid rgba(227,27,35,0.15);
+            border-radius: 16px;
+            padding: 18px 20px;
+        }
+
+        .note-box strong {
+            display: block;
+            color: var(--accent-color);
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .note-box ul {
+            list-style: none;
+        }
+
+        .note-box li {
+            position: relative;
+            padding-left: 14px;
+            font-size: 16px;
+            color: #222;
+        }
+
+        .note-box li + li {
+            margin-top: 6px;
+        }
+
+        .note-box li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+        }
+
+        .price-box {
+            margin-top: 22px;
+            border-top: 1px solid var(--line-color);
+            border-bottom: 1px solid var(--line-color);
+            padding: 18px 0;
+        }
+
+        .price-title {
+            color: var(--accent-color);
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .price-list {
+            list-style: none;
+        }
+
+        .price-list li {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 8px 0;
+            border-bottom: 1px dashed #e6e0da;
+            font-size: 16px;
+        }
+
+        .price-list li:last-child {
+            border-bottom: none;
+        }
+
+        .price-list .name {
+            color: #222;
+        }
+
+        .price-list .price {
+            white-space: nowrap;
+            font-weight: 700;
+        }
+
+        .price-list del {
+            color: #999;
+            margin-right: 6px;
+            font-weight: 400;
+        }
+
+        .button-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 24px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            padding: 13px 22px;
+            border-radius: 999px;
+            background: var(--text-color);
+            color: #fff;
+            font-weight: 700;
+            font-size: 15px;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            background: #333;
+        }
+
+        .button.accent {
+            background: var(--accent-color);
+        }
+
+        .button.accent:hover {
+            background: #b81319;
+        }
+
+        .event-list {
+            display: grid;
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .event-item {
+            padding: 18px 20px;
+            border-radius: 16px;
+            background: #f8f6f3;
+            border: 1px solid var(--line-color);
+        }
+
+        .event-item h4 {
+            font-size: 18px;
+            margin-bottom: 6px;
+            color: #111;
+        }
+
+        .event-item p {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .phone-box {
+            margin-top: 20px;
+            padding: 22px;
+            border-radius: 18px;
+            background: #111;
+            color: #fff;
+            text-align: center;
+        }
+
+        .phone-box p {
+            color: #fff;
+            font-size: 16px;
+        }
+
+        .phone-box a {
+            display: inline-block;
+            margin-top: 8px;
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            color: #fff;
+        }
+
+        .footer {
+            padding: 52px 20px 64px;
+            text-align: center;
+            color: #777;
+            font-size: 13px;
+        }
+
+        @media (max-width: 760px) {
+            .hero {
+                min-height: auto;
+                padding-top: 56px;
+            }
+
+            .hero-logo-box {
+                height: 82px;
+                min-width: 150px;
+            }
+
+            .cover-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .section {
+                padding: 68px 18px;
+            }
+
+            .program-card {
+                border-radius: 20px;
+            }
+
+            .price-list li {
+                flex-direction: column;
+                gap: 2px;
+            }
+
+            .button-row {
+                flex-direction: column;
+            }
+
+            .button {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .hero h1 {
+                font-size: 34px;
+            }
+
+            .hero-logos {
+                gap: 12px;
+            }
+
+            .hero-logo-box {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="page">
+
+    <header class="hero">
+        <div class="hero-inner">
+            <p class="eyebrow">POP-UP PROGRAM</p>
+
+            <h1>bac. 아트페어<br>X<br>월간미술 팝업</h1>
+
+            <div class="hero-info">
+                <p>2026. 7.16(목)~19(일) 10:30~19:00</p>
+                <p>홍익대아트디자인밸리</p>
+            </div>
+
+            <div class="hero-logos">
+                <div class="hero-logo-box bac">
+                    <img src="./images/logo_bac.png" alt="bac. 로고">
+                </div>
+
+                <div class="hero-logo-box monthly">
+                    <img src="./images/month.png" alt="월간미술 제호">
+                </div>
+            </div>
+
+            <p class="scroll-guide">아래로 내려 팝업 프로그램을 확인해보세요</p>
+        </div>
+    </header>
+
+    <main>
+        <section class="section intro-section">
+            <div class="section-inner">
+                <h2 class="section-title">월간미술이 bac. 아트페어에서<br>여러분을 만납니다</h2>
+
+                <div class="intro-text">
+                    <p>
+                        1976년부터 2026년 오늘까지, 단 한 번도 쉬지 않고 미술과 사람을 연결해 온 월간미술 —
+                        미래의 작가, 기획자, 아트피플이 될 당신을 위한, 단 하나의 종합 미술전문지입니다.
+                    </p>
+
+                    <p>
+                        현장을 기록하고 시대를 재정의하며 변화의 마중물이 되어 온 월간미술은
+                        2024년 전면 리뉴얼과 취재역량 강화를 통해 점점 다성화하는 글로벌 미술 환경에 발맞추고 있습니다.
+                    </p>
+
+                    <p>
+                        bac. 아트페어에서 월간미술은 지난 50년의 역사를 체험할 수 있는 참여형 전시,
+                        신진작가와 1:1 대화를 통해 활동의 참조점을 점검하는 ‘기자의 시선: 아티스트 밋업’,
+                        어디에도 없을 유니크한 디자인의 특별 굿즈와 당신의 미술 취향을 저격할 블라인드 북까지,
+                        편집부가 설레는 마음으로 한땀 한땀 준비한 bac. 한정 팝업 프로그램에 놀러오세요!
+                    </p>
+                </div>
+
+                <div class="cover-grid" aria-label="월간미술 표지 아카이브">
+                    <div class="cover-card">
+                        <img src="./images/1982_22호_022.jpg" alt="월간미술 1982년 22호 표지">
+                    </div>
+                    <div class="cover-card">
+                        <img src="./images/1986_39호_039.jpg" alt="월간미술 1986년 39호 표지">
+                    </div>
+                    <div class="cover-card">
+                        <img src="./images/1994_08_115.jpg" alt="월간미술 1994년 8월호 표지">
+                    </div>
+                    <div class="cover-card">
+                        <img src="./images/1996_06_137.jpg" alt="월간미술 1996년 6월호 표지">
+                    </div>
+                    <div class="cover-card">
+                        <img src="./images/1999_01_168.jpg" alt="월간미술 1999년 1월호 표지">
+                    </div>
+                    <div class="cover-card">
+                        <img src="./images/2003_03_218.jpg" alt="월간미술 2003년 3월호 표지">
+                    </div>
+                    <div class="cover-card">
+                        <img src="./images/2017.11월 표지.jpg" alt="월간미술 2017년 11월호 표지">
+                    </div>
+                    <div class="cover-card">
+                        <img src="./images/2024.10.jpg" alt="월간미술 2024년 10월호 표지">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section program-section">
+            <div class="section-inner">
+                <h2 class="section-title">프로그램 소개</h2>
+
+                <div class="program-list">
+
+                    <article class="program-card">
+                        <p class="program-number">PROGRAM 01</p>
+                        <h3>전시 《1976-2026 월간미술 사건파일》</h3>
+
+                        <p>
+                            한국현대미술의 주요 장면과 함께 호흡해온 계간미술 / 월간미술의 주요 기사 다섯 개를 직접 골라 스크랩하세요.
+                        </p>
+
+                        <div class="note-box">
+                            <strong>참여방법 · 무료</strong>
+                            <ul>
+                                <li>인스타그램 @monthly_art 팔로우 확인 후 파일을 드립니다.</li>
+                                <li>읽고 싶은 기사를 최대 다섯 개까지 골라보세요.</li>
+                            </ul>
+                        </div>
+                    </article>
+
+                    <article class="program-card">
+                        <p class="program-number">PROGRAM 02</p>
+                        <h3>기자의 시선: 아티스트 밋업</h3>
+
+                        <div class="program-image meetup">
+                            <img src="./images/meetup.png" alt="기자의 시선: 아티스트 밋업">
+                        </div>
+
+                        <p>
+                            현장을 발로 뛰는 미술기자와 1대1로 진로와 성장의 길을 나누는 20분의 시간을 마련했습니다.
+                        </p>
+
+                        <div class="button-row">
+                            <a class="button accent" href="https://forms.gle/aqxHLvGTvvUgsPui8" target="_blank" rel="noopener noreferrer">
+                                아티스트 밋업 신청하기
+                            </a>
+                        </div>
+                    </article>
+
+                    <article class="program-card">
+                        <p class="program-number">PROGRAM 03</p>
+                        <h3>특별 굿즈 판매</h3>
+
+                        <div class="program-image keyring">
+                            <img src="./images/keyring.jpg" alt="월간미술 특별 제작 키링">
+                        </div>
+
+                        <p>
+                            데스크에도, 가방에도 잘 어울리는, 특별 제작 클리커 키링과 월간미술 편집부 마감 플레이리스트가 담긴 NFC 키링을 만나보세요.
+                        </p>
+
+                        <div class="program-video">
+                            <video src="./images/keyring.mp4" controls muted playsinline preload="metadata">
+                                브라우저가 동영상을 지원하지 않습니다.
+                            </video>
+                        </div>
+
+                        <div class="price-box">
+                            <p class="price-title">판매가격</p>
+                            <ul class="price-list">
+                                <li>
+                                    <span class="name">월간미술 아카이브 클리커 키링</span>
+                                    <span class="price">15,900원</span>
+                                </li>
+                                <li>
+                                    <span class="name">월간미술 NFC 키링</span>
+                                    <span class="price">9,900원</span>
+                                </li>
+                                <li>
+                                    <span class="name">월간미술 키링 세트</span>
+                                    <span class="price"><del>25,800원</del>23,200원</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </article>
+
+                    <article class="program-card">
+                        <p class="program-number">PROGRAM 04</p>
+                        <h3>정기구독 할인 이벤트</h3>
+
+                        <p>
+                            월간미술 정기구독 고민하셨던 분! 지금입니다!
+                            팝업 진행 단 4일간, 현장에서 정기구독 신청하시면 추가 특별할인!
+                        </p>
+
+                        <div class="price-box">
+                            <p class="price-title">팝업 특별가</p>
+                            <ul class="price-list">
+                                <li>
+                                    <span class="name">1년 정기구독가</span>
+                                    <span class="price"><del>150,000원</del>135,000원</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="phone-box">
+                            <p>
+                                7.16-19일 4일간 본 페이지를 보고 아래 전화번호로 연락해주시면<br>
+                                현장에서와 같은 가격으로 정기구독 가능합니다.
+                            </p>
+                            <a href="tel:0220887722">02-2088-7722</a>
+                        </div>
+                    </article>
+
+                    <article class="program-card">
+                        <p class="program-number">PROGRAM 05</p>
+                        <h3>월간미술 & 블라인드북 판매</h3>
+
+                        <p>
+                            미술계 실전 생존 키트, 궁금하지 않으세요?
+                            편집부가 큐레이션 한 다섯 가지 주제의 블라인드북을 준비했습니다.
+                        </p>
+
+                        <p>
+                            평소 관심있던 주제를 담은 월간미술 종이 잡지도 저렴하게 업어가세요!
+                        </p>
+
+                        <div class="price-box">
+                            <p class="price-title">판매가격</p>
+                            <ul class="price-list">
+                                <li>
+                                    <span class="name">블라인드북</span>
+                                    <span class="price"><del>30,000원</del>21,900원</span>
+                                </li>
+                                <li>
+                                    <span class="name">월간미술 26년 7월호</span>
+                                    <span class="price"><del>15,000원</del>13,500원</span>
+                                </li>
+                                <li>
+                                    <span class="name">월간미술 26년 과월호</span>
+                                    <span class="price"><del>15,000원</del>12,000원</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </article>
+
+                    <article class="program-card">
+                        <p class="program-number">PROGRAM 06</p>
+                        <h3>이벤트</h3>
+
+                        <div class="event-list">
+                            <div class="event-item">
+                                <h4>1. 팔로잉 바이럴 이벤트</h4>
+                                <p>월간미술 부스 스토리 인증하면 월간미술 영문 2호 증정! 소진 시 종료됩니다.</p>
+                            </div>
+
+                            <div class="event-item">
+                                <h4>2. 나도 기자다</h4>
+                                <p>‘나도 기자다’ 웹페이지를 통해 팝업 후기를 만들어 스토리에 올리고 인증하면 과월호 1부를 증정합니다. 한정 수량으로 진행됩니다.</p>
+                            </div>
+
+                            <div class="event-item">
+                                <h4>3. 책나눔 DAY</h4>
+                                <p>월간미술 편집부에서 엄선한 미술서적을 무료 나눔합니다.</p>
+                            </div>
+                        </div>
+
+                        <div class="button-row">
+                            <a class="button accent" href="#" target="_blank" rel="noopener noreferrer">
+                                책나눔 DAY 신청하기
+                            </a>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 월간미술 · bac. 아트페어 X 월간미술 팝업</p>
+    </footer>
+
+</div>
+</body>
+</html>
